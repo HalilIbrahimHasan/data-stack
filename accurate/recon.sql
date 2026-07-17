@@ -1,7 +1,61 @@
 
 
+DECLARE @MemberId VARCHAR(100) = '1000512462';
+
+SELECT
+    issuer,
+    insurance_type,
+    coverage_year,
+    folder_year,
+
+    policy_id,
+    health_coverage_policy_no,
+
+    member_id,
+    issuer_indiv_identifier,
+    exchg_assigned_enrollee_id,
+
+    enrollee_status,
+    maintenance_type_code,
+    member_maint_effective_date,
+
+    source_file_name,
+    row_number_in_file,
+    file_hash,
+    load_run_id,
+    loaded_at
+
+FROM dbo.inbound_automation
+WHERE
+       LTRIM(RTRIM(member_id)) = @MemberId
+    OR LTRIM(RTRIM(issuer_indiv_identifier)) = @MemberId
+    OR LTRIM(RTRIM(exchg_assigned_enrollee_id)) = @MemberId
+ORDER BY
+    coverage_year,
+    member_maint_effective_date,
+    loaded_at;
 
 
+=======================
+SELECT
+    issuer,
+    insurance_type,
+    coverage_year,
+    folder_year,
+    COUNT_BIG(*) AS row_count
+FROM dbo.inbound_automation
+WHERE issuer LIKE '%83502%'
+GROUP BY
+    issuer,
+    insurance_type,
+    coverage_year,
+    folder_year
+ORDER BY
+    issuer,
+    coverage_year,
+    folder_year;
+
+================
 
 SELECT COLUMN_NAME
 FROM INFORMATION_SCHEMA.COLUMNS
