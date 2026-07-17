@@ -308,7 +308,47 @@ CROSS APPLY
 
 INNER JOIN #MissingEnrollees m
     ON m.enrollee_id = matched.matching_value;
+/*========================================================= */
 
+SELECT
+    m.enrollee_id AS [Swathi Enrollee ID],
+
+    ia.issuer,
+    ia.insurance_type,
+    ia.coverage_year,
+    ia.folder_year,
+
+    ia.policy_id,
+    ia.health_coverage_policy_no,
+
+    ia.member_id,
+    ia.issuer_indiv_identifier,
+    ia.exchg_assigned_enrollee_id,
+
+    ia.enrollee_status,
+    ia.maintenance_type_code,
+    ia.member_maint_effective_date,
+
+    ia.source_file_name,
+    ia.row_number_in_file,
+    ia.file_hash,
+    ia.load_run_id,
+    ia.loaded_at
+
+FROM #SwathiMissingEnrolled m
+INNER JOIN dbo.inbound_automation ia
+    ON  LTRIM(RTRIM(ia.member_id))
+            = LTRIM(RTRIM(m.enrollee_id))
+    OR  LTRIM(RTRIM(ia.issuer_indiv_identifier))
+            = LTRIM(RTRIM(m.enrollee_id))
+    OR  LTRIM(RTRIM(ia.exchg_assigned_enrollee_id))
+            = LTRIM(RTRIM(m.enrollee_id))
+
+ORDER BY
+    m.enrollee_id,
+    ia.coverage_year,
+    ia.member_maint_effective_date,
+    ia.loaded_at;
 
 /* ============================================================
    RESULT 1: HER ID İÇİN FOUND / NOT FOUND DURUMU
